@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Estudio · Estación de servicio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<style>
+  :root{
+    --paper:#FAF8F3; --card:#FFFFFF; --ink:#22201B; --soft:#6B665B; --line:#E3DED2;
+    --acc:#B3261E; --acc-soft:#FBEEEC; --acc-ink:#FFFFFF; --warn:#B3261E;
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#1B1A17; --card:#24221E; --ink:#F1EDE4; --soft:#B3AC9E; --line:#3A362F;
+      --acc:#E0574D; --acc-soft:#3A2321; --acc-ink:#FFFFFF; --warn:#F08A82;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#1B1A17; --card:#24221E; --ink:#F1EDE4; --soft:#B3AC9E; --line:#3A362F;
+    --acc:#E0574D; --acc-soft:#3A2321; --acc-ink:#FFFFFF; --warn:#F08A82;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    font-size:17px; line-height:1.5;
+  }
+  .wrap{max-width:620px;margin:0 auto;padding:28px 18px 140px}
+  header{margin-bottom:26px}
+  .brand{display:flex;align-items:center;gap:11px;margin-bottom:20px}
+  .logo{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:15px;letter-spacing:.04em;color:var(--acc-ink);background:var(--acc);width:44px;height:44px;border-radius:11px;display:grid;place-items:center}
+  .brand-name{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:17px;line-height:1.15;color:var(--ink)}
+  .brand-sub{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+  .kicker{font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc)}
+  h1{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:32px;line-height:1.1;margin:6px 0 10px;text-wrap:balance}
+  .lead{color:var(--soft);margin:0;max-width:52ch}
+  .lead b{color:var(--ink)}
+  section{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px 16px 20px;margin:14px 0}
+  .qnum{font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--acc);margin-bottom:2px}
+  h2{font-family:Georgia,"Times New Roman",serif;font-weight:600;font-size:21px;margin:2px 0 4px;line-height:1.25}
+  .hint{font-size:14.5px;color:var(--soft);margin:0 0 12px}
+  .req{color:var(--warn)}
+  .field{margin:14px 0 0}
+  .field>label.txt{display:block;font-weight:700;font-size:15.5px;margin-bottom:7px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media (max-width:420px){.row{grid-template-columns:1fr}}
+  input[type=text],input[type=tel],input[type=email],textarea{
+    width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:10px;
+    font:inherit;color:var(--ink);background:var(--card);
+  }
+  input:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:1px;border-color:var(--acc)}
+  textarea{min-height:84px;resize:vertical}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:8px}
+  .chips label{
+    position:relative;display:inline-flex;align-items:center;min-height:44px;padding:9px 15px;
+    border:1.5px solid var(--line);border-radius:999px;background:var(--card);
+    font-size:15.5px;cursor:pointer;user-select:none;color:var(--ink);
+  }
+  .chips input{position:absolute;opacity:0;width:1px;height:1px}
+  .chips label:has(input:checked){background:var(--acc);border-color:var(--acc);color:var(--acc-ink);font-weight:700}
+  .chips label:has(input:focus-visible){outline:2px solid var(--acc);outline-offset:2px}
+  .docs{background:var(--acc-soft);border:1px solid var(--line);border-radius:var(--radius);padding:16px 16px 6px;margin:14px 0}
+  .docs h2{margin-bottom:8px}
+  .docs p{margin:0 0 10px}
+  .send{
+    position:fixed;left:0;right:0;bottom:0;background:var(--paper);
+    border-top:1px solid var(--line);padding:12px 18px calc(12px + env(safe-area-inset-bottom));
+  }
+  .send-in{max-width:620px;margin:0 auto;display:flex;flex-direction:column;gap:6px}
+  .btns{display:flex;gap:10px}
+  #btn-wa{flex:1;background:var(--acc);color:var(--acc-ink);border:none;font:inherit;font-size:17px;font-weight:700;display:grid;place-items:center;text-decoration:none;border-radius:12px;min-height:52px;cursor:pointer}
+  #btn-wa:active{transform:translateY(1px)}
+  #btn-copy{background:var(--card);color:var(--ink);border:1.5px solid var(--line);padding:0 16px;font:inherit;font-weight:700;border-radius:12px;min-height:52px;cursor:pointer}
+  #btn-copy:focus-visible,#btn-wa:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  #msg{font-size:14px;color:var(--warn);margin:0 2px;display:none}
+  .foot{color:var(--soft);font-size:13.5px;margin-top:22px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="brand"><span class="logo">SEG</span><div><div class="brand-name">Seguros · Rojales</div><div class="brand-sub">Oficina Mapfre</div></div></div>
+  <div class="kicker">Estudio de seguro · Estación de servicio</div>
+  <h1>Cuestionario para cotizar tu gasolinera</h1>
+  <p class="lead">Lo que ya aparece en tu estudio de BBVA Allianz <b>viene rellenado</b>: revísalo y corrige lo que no sea así. El resto son <b>3-4 minutos</b> desde el móvil. Si algo no lo sabes, déjalo en blanco y envíalo igual: te lo pregunto yo. Al terminar, el botón de abajo abre WhatsApp con las respuestas ya escritas.</p>
+</header>
+
+<section>
+  <div class="qnum">1 · La empresa</div>
+  <h2>Quién contrata</h2>
+  <div class="field"><label class="txt" for="f-razon">Razón social</label>
+    <input type="text" id="f-razon" data-k="Razón social" autocomplete="organization" value="Rasecarburantes S.L."></div>
+  <div class="row">
+    <div class="field"><label class="txt" for="f-cif">CIF</label>
+      <input type="text" id="f-cif" data-k="CIF" autocomplete="off" value="B88811021"></div>
+    <div class="field"><label class="txt" for="f-contacto">Persona de contacto</label>
+      <input type="text" id="f-contacto" data-k="Contacto" autocomplete="name"></div>
+  </div>
+  <div class="row">
+    <div class="field"><label class="txt" for="f-tel">Teléfono</label>
+      <input type="tel" id="f-tel" data-k="Teléfono" autocomplete="tel"></div>
+    <div class="field"><label class="txt" for="f-email">Email</label>
+      <input type="email" id="f-email" data-k="Email" autocomplete="email"></div>
+  </div>
+  <div class="field"><label class="txt" for="f-dir">Dirección de la estación</label>
+    <p class="hint">Tu estudio solo dice "polígono industrial, 03680 Aspe": añade la calle o el nombre del polígono.</p>
+    <input type="text" id="f-dir" data-k="Dirección de la estación" value="Polígono industrial, 03680 Aspe (Alicante)"></div>
+</section>
+
+<section>
+  <div class="qnum">2 · La instalación</div>
+  <h2>Cómo es la estación</h2>
+  <div class="field"><label class="txt">Régimen</label>
+    <div class="chips" data-k="Régimen" data-type="radio">
+      <label><input type="radio" name="regimen" value="Propietario" checked>Propietario</label>
+      <label><input type="radio" name="regimen" value="Alquiler">Alquiler</label>
+      <label><input type="radio" name="regimen" value="Concesión">Concesión</label>
+    </div></div>
+  <div class="row">
+    <div class="field"><label class="txt" for="f-anio">Año de construcción</label>
+      <input type="text" id="f-anio" data-k="Año de construcción" inputmode="numeric" value="2014"></div>
+    <div class="field"><label class="txt" for="f-m2">Superficie total (m²)</label>
+      <input type="text" id="f-m2" data-k="Superficie m²" inputmode="numeric" value="650"></div>
+  </div>
+  <div class="field"><label class="txt">Bandera</label>
+    <div class="chips" data-k="Bandera" data-type="radio">
+      <label><input type="radio" name="bandera" value="Repsol">Repsol</label>
+      <label><input type="radio" name="bandera" value="Cepsa / Moeve">Cepsa / Moeve</label>
+      <label><input type="radio" name="bandera" value="BP">BP</label>
+      <label><input type="radio" name="bandera" value="Galp">Galp</label>
+      <label><input type="radio" name="bandera" value="Shell">Shell</label>
+      <label><input type="radio" name="bandera" value="Independiente">Independiente</label>
+      <label><input type="radio" name="bandera" value="Otra">Otra</label>
+    </div></div>
+  <div class="row">
+    <div class="field"><label class="txt" for="f-surt">Número de surtidores</label>
+      <input type="text" id="f-surt" data-k="Surtidores" inputmode="numeric"></div>
+    <div class="field"><label class="txt" for="f-dep">Número de depósitos</label>
+      <input type="text" id="f-dep" data-k="Depósitos" inputmode="numeric"></div>
+  </div>
+  <div class="field"><label class="txt" for="f-litros">Capacidad total de los depósitos (litros)</label>
+    <input type="text" id="f-litros" data-k="Capacidad depósitos (litros)" inputmode="numeric" placeholder="Ej.: 90.000"></div>
+  <div class="field"><label class="txt">Tipo de depósitos</label>
+    <div class="chips" data-k="Tipo de depósitos" data-type="radio">
+      <label><input type="radio" name="tipodep" value="Enterrados de doble pared">Enterrados, doble pared</label>
+      <label><input type="radio" name="tipodep" value="Enterrados de pared simple">Enterrados, pared simple</label>
+      <label><input type="radio" name="tipodep" value="Aéreos">Aéreos</label>
+      <label><input type="radio" name="tipodep" value="No lo sé">No lo sé</label>
+    </div></div>
+  <div class="field"><label class="txt" for="f-aniodep">Año de instalación de los depósitos</label>
+    <input type="text" id="f-aniodep" data-k="Año depósitos" inputmode="numeric" placeholder="Si es distinto del de la estación"></div>
+  <div class="field"><label class="txt">Productos que se venden</label>
+    <p class="hint">Marca todos los que toquen.</p>
+    <div class="chips" data-k="Productos" data-type="multi">
+      <label><input type="checkbox" value="Gasolina y gasóleo">Gasolina y gasóleo</label>
+      <label><input type="checkbox" value="GLP (autogás)">GLP (autogás)</label>
+      <label><input type="checkbox" value="GNC / GNL">GNC / GNL</label>
+      <label><input type="checkbox" value="AdBlue">AdBlue</label>
+      <label><input type="checkbox" value="Bombonas de butano">Bombonas de butano</label>
+      <label><input type="checkbox" value="Carga eléctrica">Carga eléctrica</label>
+    </div></div>
+  <div class="field"><label class="txt">Marquesina</label>
+    <div class="chips" data-k="Marquesina" data-type="radio">
+      <label><input type="radio" name="marq" value="Sí">Sí</label>
+      <label><input type="radio" name="marq" value="No">No</label>
+    </div></div>
+  <div class="field"><label class="txt">Horario</label>
+    <div class="chips" data-k="Horario" data-type="radio">
+      <label><input type="radio" name="horario" value="Cierra por la noche">Cierra por la noche</label>
+      <label><input type="radio" name="horario" value="24 horas con personal">24 h con personal</label>
+      <label><input type="radio" name="horario" value="24 horas en autoservicio sin personal por la noche">24 h autoservicio de noche</label>
+    </div></div>
+</section>
+
+<section>
+  <div class="qnum">3 · Qué más hay</div>
+  <h2>Otras actividades en el recinto</h2>
+  <p class="hint">Tu estudio dice que no hay ninguna. Si en realidad hay tienda, lavadero o cualquier otra, márcala: cada una cambia el seguro.</p>
+  <div class="field">
+    <div class="chips" data-k="Otras actividades" data-type="multi">
+      <label><input type="checkbox" value="Tienda">Tienda</label>
+      <label><input type="checkbox" value="Cafetería o restaurante">Cafetería / restaurante</label>
+      <label><input type="checkbox" value="Lavadero">Lavadero</label>
+      <label><input type="checkbox" value="Taller o boxes">Taller / boxes</label>
+      <label><input type="checkbox" value="Cajero automático">Cajero</label>
+      <label><input type="checkbox" value="Aparcamiento de camiones">Aparcamiento de camiones</label>
+      <label><input type="checkbox" value="Ninguna" checked>Ninguna</label>
+    </div></div>
+  <div class="field"><label class="txt" for="f-otras">Detalle (m² de tienda, si el lavadero es de túnel o de pistas, si el taller es propio o alquilado...)</label>
+    <input type="text" id="f-otras" data-k="Detalle otras actividades"></div>
+</section>
+
+<section>
+  <div class="qnum">4 · Personas</div>
+  <h2>Quién trabaja</h2>
+  <div class="field"><label class="txt">Número de empleados</label>
+    <p class="hint">Sin contar al titular.</p>
+    <div class="chips" data-k="Empleados" data-type="radio">
+      <label><input type="radio" name="empl" value="Ninguno">Ninguno</label>
+      <label><input type="radio" name="empl" value="1-2">1-2</label>
+      <label><input type="radio" name="empl" value="3-5">3-5</label>
+      <label><input type="radio" name="empl" value="6-10">6-10</label>
+      <label><input type="radio" name="empl" value="Más de 10">Más de 10</label>
+    </div></div>
+  <div class="field"><label class="txt">¿Hay personal de noche?</label>
+    <div class="chips" data-k="Personal de noche" data-type="radio">
+      <label><input type="radio" name="noche" value="Sí">Sí</label>
+      <label><input type="radio" name="noche" value="No">No</label>
+    </div></div>
+</section>
+
+<section>
+  <div class="qnum">5 · Protecciones</div>
+  <h2>Contra incendio y robo</h2>
+  <div class="field"><label class="txt">Marca lo que tiene la estación</label>
+    <p class="hint">Según tu estudio: extintores, detección automática de incendios, alarma interior y exterior y rejas. Falta saber si la alarma está conectada a una central receptora.</p>
+    <div class="chips" data-k="Protecciones" data-type="multi">
+      <label><input type="checkbox" value="Extintores" checked>Extintores</label>
+      <label><input type="checkbox" value="Detección automática de incendios" checked>Detección automática de incendios</label>
+      <label><input type="checkbox" value="Extinción automática">Extinción automática</label>
+      <label><input type="checkbox" value="Alarma interior y exterior" checked>Alarma interior y exterior</label>
+      <label><input type="checkbox" value="Alarma conectada a central receptora">Conectada a central receptora</label>
+      <label><input type="checkbox" value="Cámaras">Cámaras</label>
+      <label><input type="checkbox" value="Rejas o cierres metálicos" checked>Rejas / cierres</label>
+      <label><input type="checkbox" value="Caja fuerte">Caja fuerte</label>
+      <label><input type="checkbox" value="Vigilante">Vigilante</label>
+    </div></div>
+  <div class="field"><label class="txt">Parque de bomberos más cercano</label>
+    <div class="chips" data-k="Bomberos" data-type="radio">
+      <label><input type="radio" name="bomb" value="A menos de 10 minutos">Menos de 10 min</label>
+      <label><input type="radio" name="bomb" value="Entre 10 y 20 minutos">10-20 min</label>
+      <label><input type="radio" name="bomb" value="A más de 20 minutos">Más de 20 min</label>
+    </div></div>
+</section>
+
+<section>
+  <div class="qnum">6 · Capitales</div>
+  <h2>Cuánto hay que asegurar</h2>
+  <p class="hint">En euros. Las cifras vienen de tu estudio; corrígelas si han cambiado.</p>
+  <div class="field"><label class="txt" for="f-edif">Edificación (valor de reconstrucción)</label>
+    <input type="text" id="f-edif" data-k="Edificación €" inputmode="numeric" value="150.000"></div>
+  <div class="field"><label class="txt">¿Surtidores, depósitos y marquesina están dentro de esa cifra?</label>
+    <div class="chips" data-k="Instalaciones dentro de edificación" data-type="radio">
+      <label><input type="radio" name="instal" value="Sí">Sí</label>
+      <label><input type="radio" name="instal" value="No, van aparte">No, van aparte</label>
+      <label><input type="radio" name="instal" value="No lo sé">No lo sé</label>
+    </div></div>
+  <div class="field"><label class="txt" for="f-instal">Valor de surtidores, depósitos y marquesina, si va aparte</label>
+    <input type="text" id="f-instal" data-k="Instalaciones fijas €" inputmode="numeric"></div>
+  <div class="row">
+    <div class="field"><label class="txt" for="f-mob">Mobiliario y equipamiento</label>
+      <input type="text" id="f-mob" data-k="Mobiliario y equipamiento €" inputmode="numeric" value="300.000"></div>
+    <div class="field"><label class="txt" for="f-merc">Mercancías (combustible y tienda)</label>
+      <input type="text" id="f-merc" data-k="Mercancías €" inputmode="numeric" value="85.000"></div>
+  </div>
+  <div class="row">
+    <div class="field"><label class="txt" for="f-fact">Facturación anual</label>
+      <input type="text" id="f-fact" data-k="Facturación anual €" inputmode="numeric" value="2.000.000"></div>
+    <div class="field"><label class="txt" for="f-caja">Efectivo máximo en caja</label>
+      <input type="text" id="f-caja" data-k="Efectivo máximo en caja €" inputmode="numeric"></div>
+  </div>
+</section>
+
+<section>
+  <div class="qnum">7 · Lo que quieres cubrir</div>
+  <h2>Además de lo básico</h2>
+  <p class="hint">Lo básico es incendio, agua, robo, responsabilidad civil y asistencia. Esto es lo que suele faltar.</p>
+  <div class="field"><label class="txt">Pérdida de beneficios (si un siniestro cierra la estación)</label>
+    <div class="chips" data-k="Pérdida de beneficios" data-type="radio">
+      <label><input type="radio" name="pb" value="Sí, la quiero">Sí, la quiero</label>
+      <label><input type="radio" name="pb" value="Ya la tengo">Ya la tengo</label>
+      <label><input type="radio" name="pb" value="No">No</label>
+      <label><input type="radio" name="pb" value="No sé qué es">No sé qué es</label>
+    </div></div>
+  <div class="field"><label class="txt">Responsabilidad civil por contaminación (fuga de un depósito, vertido)</label>
+    <div class="chips" data-k="RC contaminación" data-type="radio">
+      <label><input type="radio" name="rcc" value="Sí, la quiero">Sí, la quiero</label>
+      <label><input type="radio" name="rcc" value="Ya la tengo en otra póliza">Ya la tengo aparte</label>
+      <label><input type="radio" name="rcc" value="No sé si la tengo">No sé si la tengo</label>
+    </div></div>
+  <div class="field"><label class="txt">Otras que te interesen</label>
+    <div class="chips" data-k="Otras coberturas" data-type="multi">
+      <label><input type="checkbox" value="Avería de maquinaria">Avería de maquinaria</label>
+      <label><input type="checkbox" value="Equipos electrónicos">Equipos electrónicos</label>
+      <label><input type="checkbox" value="Transporte de dinero">Transporte de dinero</label>
+      <label><input type="checkbox" value="Rotura de cristales y rótulos">Cristales y rótulos</label>
+      <label><input type="checkbox" value="Protección jurídica">Protección jurídica</label>
+    </div></div>
+</section>
+
+<section>
+  <div class="qnum">8 · Tu seguro actual</div>
+  <h2>Con quién estás y qué ha pasado</h2>
+  <div class="row">
+    <div class="field"><label class="txt" for="f-cia">Compañía actual</label>
+      <input type="text" id="f-cia" data-k="Compañía actual" value="BBVA Allianz (Negocio Plus)"></div>
+    <div class="field"><label class="txt" for="f-prima">Prima anual que pagas (€)</label>
+      <input type="text" id="f-prima" data-k="Prima anual actual €" inputmode="numeric"></div>
+  </div>
+  <div class="field"><label class="txt" for="f-venc">Fecha de vencimiento</label>
+    <input type="text" id="f-venc" data-k="Vencimiento" value="31/08/2027"></div>
+  <div class="field"><label class="txt">El estudio empieza el 1 de septiembre de 2026: ¿está ya firmado?</label>
+    <div class="chips" data-k="Renovado este año" data-type="radio">
+      <label><input type="radio" name="renov" value="Sí, ya está firmado">Sí, ya está firmado</label>
+      <label><input type="radio" name="renov" value="No, aún puedo decidir">No, aún puedo decidir</label>
+      <label><input type="radio" name="renov" value="No lo sé">No lo sé</label>
+    </div></div>
+  <div class="field"><label class="txt">Siniestros en los últimos 5 años</label>
+    <div class="chips" data-k="Siniestros 5 años" data-type="radio">
+      <label><input type="radio" name="sin" value="Ninguno">Ninguno</label>
+      <label><input type="radio" name="sin" value="Uno">Uno</label>
+      <label><input type="radio" name="sin" value="Dos o más">Dos o más</label>
+    </div></div>
+  <div class="field"><label class="txt" for="f-sindet">Si hubo alguno: qué pasó y cuánto pagó la compañía</label>
+    <input type="text" id="f-sindet" data-k="Detalle siniestros"></div>
+</section>
+
+<div class="docs">
+  <h2>Y por WhatsApp, junto a las respuestas</h2>
+  <p>El estudio de BBVA Allianz completo en PDF (las 4 páginas: nos falta la del precio).</p>
+  <p>El último recibo del seguro.</p>
+  <p>Tres fotos: la fachada con la marquesina, los surtidores y la tienda por dentro.</p>
+</div>
+
+<section>
+  <div class="qnum">9 · Lo que quieras añadir</div>
+  <h2>Algo más</h2>
+  <div class="field"><textarea id="f-extra" data-k="Notas" placeholder="Lo que creas que debemos saber"></textarea></div>
+</section>
+
+<p class="foot">Tus respuestas llegan por WhatsApp a la oficina y no se guardan en ningún otro sitio. Con ellas preparamos el estudio; si la compañía necesita visitar la estación, te avisamos antes.</p>
+</div>
+
+<div class="send"><div class="send-in">
+  <div class="btns">
+    <a id="btn-wa" href="#" target="_blank" rel="noopener">Enviar respuestas por WhatsApp</a>
+    <button id="btn-copy" type="button">Copiar</button>
+  </div>
+  <div id="msg"></div>
+</div></div>
+
+<script>
+(function(){
+  var WA="34694918102"; /* número de WhatsApp de la oficina, sin + ni espacios */
+  var REQ=[["f-surt","surtidores"],["f-dep","depósitos"],["f-litros","litros"],["f-tel","teléfono"]];
+  function collect(){
+    var out=["ESTUDIO ESTACIÓN DE SERVICIO — cuestionario"], missing=[];
+    REQ.forEach(function(p){ if(!document.getElementById(p[0]).value.trim()) missing.push(p[1]); });
+    document.querySelectorAll("[data-k]").forEach(function(el){
+      var k=el.getAttribute("data-k"), v="";
+      if(el.classList.contains("chips")){
+        v=[].slice.call(el.querySelectorAll("input:checked")).map(function(i){return i.value}).join(", ");
+        if(k==="Empleados" && !v) missing.push("empleados");
+      } else { v=el.value.trim(); }
+      if(v) out.push("· "+k+": "+v);
+    });
+    return {text:out.join("\n"), missing:missing};
+  }
+  function warn(t){var m=document.getElementById("msg");m.textContent=t;m.style.display=t?"block":"none";}
+  var btn=document.getElementById("btn-wa");
+  function refresh(){
+    var r=collect();
+    btn.setAttribute("href","https://wa.me/"+WA+"?text="+encodeURIComponent(r.text));
+    if(r.missing.length){warn("Sin rellenar: "+r.missing.join(", ")+". Puedes enviarlo igual.");}else{warn("");}
+  }
+  document.addEventListener("input",refresh,true);
+  document.addEventListener("change",refresh,true);
+  refresh();
+  document.getElementById("btn-copy").addEventListener("click",function(){
+    var r=collect(), b=this;
+    try{navigator.clipboard.writeText(r.text).then(function(){warn("");b.textContent="Copiado";setTimeout(function(){b.textContent="Copiar"},1600);});}
+    catch(e){warn("No se pudo copiar; usa el botón de WhatsApp.");}
+  });
+})();
+</script>
+
+</body>
+</html>
